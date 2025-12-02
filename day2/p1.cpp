@@ -10,6 +10,11 @@ struct Range {
 	unsigned long int end;
 };
 
+/* Reads a line from stdin and parses it into a vector of Ranges.
+Each range is expected to be in the format "start-end", and ranges are
+comma-separated.
+Example input: "100-200,300-400"
+*/
 std::vector<Range> read_ranges() {
 	std::vector<Range> ranges;
 
@@ -31,13 +36,14 @@ std::vector<Range> read_ranges() {
 	return ranges;
 }
 
-
 int main() {
 	std::vector<Range> ranges = read_ranges();
 	std::vector<unsigned long int> invalid_ids;
 	std::string str_i;
 	std::string fst_half;
 	std::string snd_half;
+
+	// Loop over every range, and for every range loop through
 	for (const auto& r : ranges) {
 		for (unsigned long int i = r.start; i <= r.end; i++) {
 			str_i = std::to_string(i);
@@ -46,7 +52,6 @@ int main() {
 			snd_half = str_i.substr(str_i.size() / 2);
 			if (fst_half == snd_half) {
 				invalid_ids.push_back(i);
-				std::println("Invalid ID found: {}", i);
 			}
 		}
 	}
