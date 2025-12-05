@@ -6,6 +6,8 @@
 #include <vector>
 #include <numeric>
 
+using namespace std;
+
 struct Range {
 	unsigned long int start;
 	unsigned long int end;
@@ -16,21 +18,21 @@ Each range is expected to be in the format "start-end", and ranges are
 comma-separated.
 Example input: "100-200,300-400"
 */
-std::vector<Range> read_ranges() {
-	std::vector<Range> ranges;
+vector<Range> read_ranges() {
+	vector<Range> ranges;
 
-	std::string line; // buffer for line
-	std::getline(std::cin, line); // read from sdtin to buffer
+	string line; // buffer for line
+	getline(cin, line); // read from sdtin to buffer
 
-	std::istringstream ss(line);
-	std::string token; // buffer for each comma separated token
+	istringstream ss(line);
+	string token; // buffer for each comma separated token
 
 
-	while (std::getline(ss, token, ',')) {
+	while (getline(ss, token, ',')) {
 		int dash_idx = token.find('-');
 		ranges.push_back({
-			std::stoul(token.substr(0, dash_idx)),
-			std::stoul(token.substr(dash_idx + 1))
+			stoul(token.substr(0, dash_idx)),
+			stoul(token.substr(dash_idx + 1))
 		});
 	}
 
@@ -39,13 +41,13 @@ std::vector<Range> read_ranges() {
 
 /* Checks if the given query string consists of a repeating pattern.
 */
-bool repeating_pattern(std::string& query) {
+bool repeating_pattern(string& query) {
 	size_t len = query.size();
 	// Whatever pattern must divide the len of the query
 	for (size_t pat_len = 1; pat_len <= len / 2; pat_len++) {
 		if (len % pat_len != 0) continue; // e.g. 4 % 3 = 1, and a pattern of len 3 cannot make symmetry
 		// For dividers, check if pattern consistently repeats
-		std::string pattern = query.substr(0, pat_len);
+		string pattern = query.substr(0, pat_len);
 		bool matching = true;
 
 		for (size_t i = pat_len; i < len; i +=pat_len) {
@@ -65,26 +67,26 @@ bool repeating_pattern(std::string& query) {
 }
 
 int main() {
-	std::vector<Range> ranges = read_ranges();
-	std::vector<unsigned long int> invalid_ids;
-	std::string str_i;
-	std::string fst_half;
-	std::string snd_half;
+	vector<Range> ranges = read_ranges();
+	vector<unsigned long int> invalid_ids;
+	string str_i;
+	string fst_half;
+	string snd_half;
 
 
 	// Loop over every range, and for every range loop through
 	for (const auto& r : ranges) {
 		for (unsigned long int i = r.start; i <= r.end; i++) {
-			str_i = std::to_string(i);
+			str_i = to_string(i);
 			if (repeating_pattern(str_i)) {
 				invalid_ids.push_back(i);
 			}
 		}
 	}
-	unsigned long long int id_sum = std::accumulate(
+	unsigned long long int id_sum = accumulate(
 		invalid_ids.begin(),
 		invalid_ids.end(),
 		0ULL
 	);
-	std::println("The answer is: {}", id_sum);
+	println("The answer is: {}", id_sum);
 }
