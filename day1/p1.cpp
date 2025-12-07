@@ -6,8 +6,8 @@
 int main() {
 	// Variables
 	int result = 0;
-	int dial_val = 50;
 	int sign = 0;
+	int dial_val = 50;
 
 	// Read input line by line as strings
 	for(std::string line; std::getline(std::cin, line);) {
