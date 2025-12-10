@@ -43,7 +43,7 @@ int main() {
     }
 
 	size_t num_cols = homework.size();
-	unsigned long long int answer = 0;
+	unsigned long int answer = 0;
 
 	for (size_t i = 0; i < num_cols; i++) {
 		if (ops[i] == '*') {
