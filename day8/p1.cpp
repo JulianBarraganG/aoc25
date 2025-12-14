@@ -18,26 +18,30 @@
 */
 class UnionFind {
 private:
-    std::vector<int> parent;
+    std::vector<size_t> parent;
+	std::vector<size_t> rank;
     
 public:
-	std::vector<int> rank;
     UnionFind(size_t n) : parent(n), rank(n, 0) {
         for (size_t i = 0; i < n; i++) {
+			// For initialization, every node is its own parent
             parent[i] = i;
         }
     }
     
-    int find(int x) {
+	/* Find the parent of `x`. Path compression by
+	* recursevily updates parent until it becomes root of all children.
+	*/
+    size_t find(size_t x) {
         if (parent[x] != x) {
-            parent[x] = find(parent[x]); // Path compression
+            parent[x] = find(parent[x]);
         }
         return parent[x];
     }
     
-    bool unite(int x, int y) {
-        int rootX = find(x);
-        int rootY = find(y);
+    bool unite(size_t x, size_t y) {
+        size_t rootX = find(x);
+        size_t rootY = find(y);
         
         if (rootX == rootY) {
             return false; // Already in same group
@@ -55,22 +59,22 @@ public:
         return true;
     }
     
-    bool isConnected(int x, int y) {
+    bool isConnected(size_t x, size_t y) {
         return find(x) == find(y);
     }
 
     // Get sizes of all circuits
-    std::vector<int> getComponentSizes(size_t n) {
-        std::unordered_map<int, int> componentSize;
+    std::vector<size_t> getComponentSizes() {
+        std::unordered_map<size_t, size_t> componentSize;
         
         // Count size of each component
-        for (size_t i = 0; i < n; i++) {
-            int root = find(i);
+        for (size_t i = 0; i < parent.size(); i++) {
+            size_t root = find(i);
             componentSize[root]++;
         }
         
         // Extract sizes into vector
-        std::vector<int> sizes;
+        std::vector<size_t> sizes;
         for (const auto& [root, size] : componentSize) {
             sizes.push_back(size);
         }
@@ -91,7 +95,7 @@ struct Cable {
 
 int main() {
 
-	// First read in all elements
+	// Phase 1: First read in all elements
 	std::string line;
 	std::vector<std::array<int, 3>> positions;
 	while (std::getline(std::cin, line)) {
@@ -109,7 +113,9 @@ int main() {
 		return 1;
 	}
 
-		std::priority_queue<Cable, std::vector<Cable>, std::greater<>> minHeap;
+	// Phase 2: Read in a priority queue, to maintain min heap structure
+	// This allows us to take (and pop) the pair to connect at "top" at all times.
+	std::priority_queue<Cable, std::vector<Cable>, std::greater<>> minHeap;
 
 	for (size_t i = 0; i < N - 1; i++) {
 		for (size_t j = i + 1; j < N; j++) {
@@ -124,7 +130,7 @@ int main() {
 		}
 	}
 
-    // Connect the shortest X pairs
+    // Phase 3: Connect the shortest `num_iter` pairs
 	size_t num_iter= 1000;
 
 	UnionFind circuits(N);
@@ -135,18 +141,20 @@ int main() {
 		circuits.unite(cable.i, cable.j);
 	}
     
-    // Get all component sizes
-    std::vector<int> sizes = circuits.getComponentSizes(N);
+    // Phase 4: Get all component sizes, sort and multiply top 3
+    std::vector<size_t> sizes = circuits.getComponentSizes();
     
-    // Sort in descending order
+    // Sort in descending order using ranges (best modern practices) from algorithm
     std::ranges::sort(sizes, std::greater<>());
     
     // Multiply the three largest
     if (sizes.size() >= 3) {
         long long result = static_cast<long long>(sizes[0]) * sizes[1] * sizes[2];
-        std::println("\nAnswer: {} * {} * {} = {}", 
+        std::println("Answer: {} * {} * {} = {}", 
                     sizes[0], sizes[1], sizes[2], result);
-    }
+    } else {
+		std::println("Something went terribly wrong. Sizes was instantiated size N > 2. Christmas is ruined... :(");
+	}
 
     return 0;
 }
