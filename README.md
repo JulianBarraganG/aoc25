@@ -7,7 +7,7 @@ Using the AoC 2025 as an opportunity to revisit and hone my C++ skills. Haven't 
 I choose to specify my goals before starting, since I believe narrowing down objectives really helps me focus and deep dive.
 
 The goal is to leverage native C++ as much as possible. Rather then exploring the ecosystem and learning frameworks and libraries, I want to learn C++.
-Acknowledging that in reality I would be using libraries for say Matrix operations or Graph algorithms, the goal here is to learn about C++, the sources of good resources and C++ documentation.
+In reality, I acknowledge that I would be using libraries for say Matrix operations or Graph algorithms. The goal however, is to learn about C++, what are available good resources and C++ documentation etc.
 
 An alternate goal, is improved algorithmic thinking, better reasoning skills and problem solving (which AoC is ideal for), which align well with my original goal, since I won't be able to rely on existing implementations.
 
